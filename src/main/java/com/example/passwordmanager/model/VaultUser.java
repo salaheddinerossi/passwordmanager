@@ -23,5 +23,7 @@ public class VaultUser {
     @OneToMany(mappedBy = "vaultUser")
     List<KeyInfo> keyInfos;
 
+    @OneToMany(mappedBy = "vaultUser")
+    List<MacAddress> macAddresses;
 
 }

@@ -19,6 +19,11 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
+    @ExceptionHandler(MacAddressNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handelMacAddressNotFoundException(MacAddressNotFoundException e){
+        return e.getMessage();
+    }
 
 
 }

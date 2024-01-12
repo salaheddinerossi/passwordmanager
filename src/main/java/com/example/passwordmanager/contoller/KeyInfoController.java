@@ -9,17 +9,16 @@ import com.example.passwordmanager.service.KeyInfoService;
 import com.example.passwordmanager.service.VaultUserService;
 import com.example.passwordmanager.util.SecurityUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.IOException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Objects;
 
@@ -126,4 +125,38 @@ public class KeyInfoController {
         return  ResponseEntity.ok(keyInfoRequests);
     }
 
+    @GetMapping("/mac")
+    public String getMacAddress(HttpServletRequest request) {
+        String ipAddress = request.getRemoteAddr();
+        System.out.println(ipAddress);
+        return resolveMacAddress(ipAddress);
+    }
+
+
+    private String resolveMacAddress(String ipAddress) {
+        try {
+            String command = "arp -a";
+            Process process = Runtime.getRuntime().exec(command);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().startsWith(ipAddress)) {
+                    String[] parts = line.trim().split("\\s+");
+                    if (parts.length >= 3 && isValidMacAddress(parts[1])) {
+                        return parts[1];
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "MAC Address Not Found";
+    }
+
+    private boolean isValidMacAddress(String macAddress) {
+        return macAddress.matches("[0-9A-Fa-f]{2}(-[0-9A-Fa-f]{2}){5}"); // Adjusted for MAC addresses separated by hyphens
+    }
 }
