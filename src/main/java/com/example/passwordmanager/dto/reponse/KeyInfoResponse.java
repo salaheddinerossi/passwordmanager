@@ -12,6 +12,6 @@ public class KeyInfoResponse {
 
     private String username;
 
-    private String DecodedPassword;
+    private String password;
 
 }

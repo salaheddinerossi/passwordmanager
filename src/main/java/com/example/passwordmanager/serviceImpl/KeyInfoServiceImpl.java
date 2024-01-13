@@ -111,7 +111,7 @@ public class KeyInfoServiceImpl implements KeyInfoService {
             keyInfoResponse.setName(keyInfo.getName());
             keyInfoResponse.setUsername(keyInfo.getUsername());
             keyInfoResponse.setId(keyInfo.getId());
-            keyInfoResponse.setDecodedPassword(
+            keyInfoResponse.setPassword(
                     cryptoService.decrypt(keyInfo.getPassword(), keyInfo.getIv(),keyInfo.getSalt(), paraphrase));
             keyInfoResponses.add(keyInfoResponse);
         }

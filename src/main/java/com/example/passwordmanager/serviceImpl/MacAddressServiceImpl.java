@@ -59,10 +59,14 @@ public class MacAddressServiceImpl implements MacAddressService {
     @Override
     public Boolean checkIfAddressAllowed(String ipAddress,VaultUser vaultUser) {
 
-        String deviceMacAddress = resolveMacAddress(ipAddress);
+        String deviceMacAddress = "\"" + resolveMacAddress(ipAddress).toUpperCase().replace("-", ":") + "\"";
+        System.out.println("===================================================");
+        System.out.println("deviceMacAddress");
+        System.out.println(deviceMacAddress);
 
         for(MacAddress macAddress : vaultUser.getMacAddresses()){
-
+            System.out.println(macAddress.getMacAddress());
+            System.out.println(Objects.equals(macAddress.getMacAddress(), deviceMacAddress));
             if(Objects.equals(macAddress.getMacAddress(), deviceMacAddress)){
                 return true;
             }
